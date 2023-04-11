@@ -78,52 +78,40 @@ class ChunkingV2Plugin extends ServerPlugin {
 	}
 
 	/**
-	 * @inheritdoc
+	 * initialize the plugin:
+	 * - Sets up required event subscriptions including priorities
 	 */
 	public function initialize(Server $server) {
 		$server->on('afterMethod:MKCOL', [$this, 'afterMkcol']);
 		$server->on('beforeMethod:PUT', [$this, 'beforePut']);
 		$server->on('beforeMethod:DELETE', [$this, 'beforeDelete']);
-		$server->on('beforeMove', [$this, 'beforeMove'], 90);
+		$server->on('beforeMove', [$this, 'beforeMove'], 90);				// Call before the regular Chunking Plugin
 
 		$this->server = $server;
 	}
 
-	/**
-	 * @param string $path
-	 * @param bool $createIfNotExists
-	 * @return FutureFile|UploadFile|ICollection|INode
-	 */
-	private function getUploadFile(string $path, bool $createIfNotExists = false) {
-		try {
-			$actualFile = $this->server->tree->getNodeForPath($path);
-			// Only directly upload to the target file if it is on the same storage
-			// There may be further potential to optimize here by also uploading
-			// to other storages directly. This would require to also carefully pick
-			// the storage/path used in getStorage()
-			if ($actualFile instanceof File && $this->uploadFolder->getStorage()->getId() === $actualFile->getNode()->getStorage()->getId()) {
-				return $actualFile;
-			}
-		} catch (NotFound $e) {
-			// If there is no target file we upload to the upload folder first
-		}
-
-		// Use file in the upload directory that will be copied or moved afterwards
-		if ($createIfNotExists) {
-			$this->uploadFolder->createFile(self::TEMP_TARGET);
-		}
-
-		/** @var UploadFile $uploadFile */
-		$uploadFile = $this->uploadFolder->getChild(self::TEMP_TARGET);
-		return $uploadFile->getFile();
-	}
-
 	public function afterMkcol(RequestInterface $request, ResponseInterface $response): bool {
 		try {
-			$this->prepareUpload($request->getPath());
-			$this->checkPrerequisites(false);
-		} catch (BadRequest|StorageInvalidException|NotFound $e) {
-			return true;
+			$path = $request->getPath());
+			$this->uploadFolder = $this->server->tree->getNodeForPath($path);
+			$uploadMetadata = $this->cache->get($this->uploadFolder->getName());
+			$this->uploadId = $uploadMetadata[self::UPLOAD_ID] ?? null; // ???
+			$this->uploadPath = $uploadMetadata[self::UPLOAD_TARGET_PATH] ?? null; // ???
+			
+			if (empty($this->server->httpRequest->getHeader(self::DESTINATION_HEADER))) {
+				throw new BadRequest('Skipping chunked file writing as the destination header was not passed');
+			}
+		
+			if (!$this->uploadFolder instanceof UploadFolder) {
+				throw new BadRequest('Skipping chunked file writing as the destination header was not passed'); /// what does message have to do with uploadFolder???
+			}
+
+			if (!$this->uploadFolder->getStorage()->instanceOfStorage(IChunkedFileWrite::class)) {
+				throw new StorageInvalidException('Storage does not support chunked file writing'); // AFAIK this gets thrown every time so ...
+			}
+			
+		} catch (BadRequest|StorageInvalidException|NotFound $e) { // ???
+			return true; // ???
 		}
 
 		$this->uploadPath = $this->server->calculateUri($this->server->httpRequest->getHeader(self::DESTINATION_HEADER));
@@ -313,6 +301,35 @@ class ChunkingV2Plugin extends ServerPlugin {
 		$uploadMetadata = $this->cache->get($this->uploadFolder->getName());
 		$this->uploadId = $uploadMetadata[self::UPLOAD_ID] ?? null;
 		$this->uploadPath = $uploadMetadata[self::UPLOAD_TARGET_PATH] ?? null;
+	}
+
+	/**
+	 * @param string $path
+	 * @param bool $createIfNotExists
+	 * @return FutureFile|UploadFile|ICollection|INode
+	 */
+	private function getUploadFile(string $path, bool $createIfNotExists = false) {
+		try {
+			$actualFile = $this->server->tree->getNodeForPath($path);
+			// Only directly upload to the target file if it is on the same storage
+			// There may be further potential to optimize here by also uploading
+			// to other storages directly. This would require to also carefully pick
+			// the storage/path used in getStorage()
+			if ($actualFile instanceof File && $this->uploadFolder->getStorage()->getId() === $actualFile->getNode()->getStorage()->getId()) {
+				return $actualFile;
+			}
+		} catch (NotFound $e) {
+			// If there is no target file we upload to the upload folder first
+		}
+
+		// Use file in the upload directory that will be copied or moved afterwards
+		if ($createIfNotExists) {
+			$this->uploadFolder->createFile(self::TEMP_TARGET);
+		}
+
+		/** @var UploadFile $uploadFile */
+		$uploadFile = $this->uploadFolder->getChild(self::TEMP_TARGET);
+		return $uploadFile->getFile();
 	}
 
 	private function completeChunkedWrite(string $targetAbsolutePath): void {
