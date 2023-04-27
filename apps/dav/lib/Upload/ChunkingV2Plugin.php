@@ -255,7 +255,7 @@ class ChunkingV2Plugin extends ServerPlugin {
 
 	public function beforeDelete(RequestInterface $request, ResponseInterface $response) {
 		try {
-			$this->prepareUpload($request->getPath());
+			$this->prepareUpload(dirname($request->getPath()));
 			if (!$this->uploadFolder instanceof UploadFolder) {
 				return true;
 			}
