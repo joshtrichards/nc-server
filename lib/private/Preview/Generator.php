@@ -295,10 +295,16 @@ class Generator {
 	 */
 	public static function getHardwareConcurrency(): int {
 		static $width;
+		// NOTE: This is a no-op anyhow if the admin sets preview_concurrency_* parameters which will override anything based on the below findings
 		if (!isset($width)) {
-			if (is_file("/proc/cpuinfo")) {
+			if (!ini_get('open_basedir') && is_readable("/proc/cpuinfo")) {
+				// No restrictions and available 
 				$width = substr_count(file_get_contents("/proc/cpuinfo"), "processor");
 			} else {
+				// Unable to determine CPU count from OS (will use defaults or configured values)
+				// Too complicated/taxing to check if entire open_basedir is okay
+				// Plus issue might be a different OS so punt to defaults
+				// (possibly overrriden by config anyhow)
 				$width = 0;
 			}
 		}
@@ -326,6 +332,8 @@ class Generator {
 			return $cached[$type];
 		}
 
+		// TODO: Check for configured values and use them before bothering with "guessing"
+		
 		$hardwareConcurrency = self::getHardwareConcurrency();
 		switch ($type) {
 			case "preview_concurrency_all":
