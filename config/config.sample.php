@@ -1887,8 +1887,8 @@ $CONFIG = [
  * use.
  *
  * The Web server user/PHP must have write access to this directory. It should also be located
- * outside of the Nextcloud installation directory and, for security reasons, outside of your 
- * document root.
+ * outside of the Nextcloud installation directory (to pass code checks) and outside of your 
+ * document/web root (for security reasons).
  * 
  * Additionally you have to make sure that your PHP configuration considers this a valid
  * tmp directory, by setting the TMP, TMPDIR, and TEMP variables to the required directories.
