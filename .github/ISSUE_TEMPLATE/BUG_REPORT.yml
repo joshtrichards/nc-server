@@ -7,17 +7,26 @@ body:
     attributes:
       value: |
         ### 👍 Thank you for contributing to our project!
-        Please note this is a **free and open-source** project. Most people take on their own time to help you, so please, be patient.
-        You can obtain [Enterprise support](https://nextcloud.com/support/) if you run Nextcloud Server in a mission critical environment.
+        Please note Nextcloud Server is a **free and open-source** project. Most people volunteer their own time to help you, so please, be patient as well as respectful of their time.
+        This is **not** a technical support or general troubleshooting channel - you may never receive a direct response, but you report will be read by over 500 (!) maintainers and contributors.
+        Someone **may** follow-up if more information is needed, but you **might not** receive a personal response. The priorities are: reviewing each report, triaging issues, and fixing known and reported bugs.
+        If you use Nextcloud Server and it is critical to your mission, you may obtain [Enterprise support](https://nextcloud.com/support/) from Nextcloud GmbH or a [Nextcloud *certified* partner](https://nextcloud.com/partners/).
   - type: checkboxes
     id: before-posting
     attributes:
       label: "⚠️ This issue respects the following points: ⚠️"
       description: All conditions are **required**. Your issue can be closed if these are checked incorrectly.
       options:
-        - label: This is a **bug**, not a question or a configuration/webserver/proxy issue.
+        - label: This is not a technical support question or a general troubleshooting query.
+          description: If it may be, posting your query to the [Nextcloud Community Forum](https://help.nextcloud.com/) may get you assistance faster.
           required: true
-        - label: This issue is **not** already reported on [Github](https://github.com/nextcloud/server/issues?q=is%3Aopen+is%3Aissue+label%3Abug) OR [Nextcloud Community Forum](https://help.nextcloud.com/) _(I've searched it)_.
+        - label: This appears to be **bug**, not local/environment specific issue.
+          description: If unsure, posting your query to the [Nextcloud Community Forum](https://help.nextcloud.com/) first can provide clarity.
+          required: true
+        - label: This issue does not seem to already be reported.
+          description: |
+            [Search existing open bugs](https://github.com/nextcloud/server/issues?q=is%3Aissue+sort%3Acreated-desc+is%3Aopen+label%3Abug) and [Search recently closed bugs](https://github.com/nextcloud/server/issues?q=is%3Aissue+is%3Aclosed+sort%3Acreated-desc+label%3Abug).
+            If your bug is already reported by someone else, give it a 👍 to help us prioritize it.
           required: true
         - label: Nextcloud Server **is** up to date. See [Maintenance and Release Schedule](https://github.com/nextcloud/server/wiki/Maintenance-and-Release-Schedule) for supported versions.
           required: true
@@ -28,18 +37,22 @@ body:
     attributes:
       label: Bug description
       description: |
-        Provide a description of the bug you're experiencing.
-        Don't just expect someone will guess what your specific problem is and provide full details.
+        Provide a brief description of the bug you're experiencing.
+      placeholder: |
+        A perfect description is unnecessary, but a concise and approachable description makes it more likely your report can be quickly reviewed, prioritized, and addressed by our busy volunteers, community members, and developers.
+        Any extra context or additional details can be provided at the end of this form.
     validations:
       required: true
   - type: textarea
     id: reproduce
     attributes:
-      label: Steps to reproduce
+      label: Reproduction steps
       description: |
-        Describe the steps someone else might use to reproduce the bug.
+        "How do you trigger this bug? Please walk us through it step by step."
       placeholder: |
-        The better your description is _(go 'here', click 'there'...)_ the fastest you'll get an _(accurate)_ answer. 
+        Describe the steps someone else would likely need to go through to reproduce the bug.
+        The better your description is the fastesr your bug can be reviewed and addressed. 
+        Example: (1. Go 'here', 2. Click 'there'..-) 
       value: |
         1.
         2.
@@ -168,6 +181,7 @@ body:
       label: Configuration report
       description: |
         Provide information about your configuration.
+        Not required, but your bug report may take longer to review.
       placeholder: |
         To get this information, execute one of the following commands on the CLI:
         ```shell
