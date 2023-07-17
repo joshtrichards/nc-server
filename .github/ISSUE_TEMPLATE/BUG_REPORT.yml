@@ -37,7 +37,8 @@ body:
     attributes:
       label: Steps to reproduce
       description: |
-        Describe the steps to reproduce the bug.
+        Describe the steps someone else might use to reproduce the bug.
+      placeholder: |
         The better your description is _(go 'here', click 'there'...)_ the fastest you'll get an _(accurate)_ answer. 
       value: |
         1.
@@ -167,6 +168,7 @@ body:
       label: Configuration report
       description: |
         Provide information about your configuration.
+      placeholder: |
         To get this information, execute one of the following commands on the CLI:
         ```shell
         sudo -u www-data php occ config:list system
@@ -181,6 +183,7 @@ body:
       label: List of activated Apps
       description: |
         Provide information about your apps.
+      placeholder: |
         To get this information, execute one of the following commands on the CLI:
         ```shell
         sudo -u www-data php occ app:list
@@ -192,9 +195,10 @@ body:
   - type: textarea
     id: nextcloud-signingstatus
     attributes:
-      label: Nextcloud Signing status
+      label: Nextcloud code integrity status
       description: |
-        Provide Nextcloud Signing status.
+        Confirms integrity of Nextcloud code.
+      placeholder: |
         First, login as Admin user into your Nextcloud, then access this URL:
         ```shell
         https://yournextcloud.tld/index.php/settings/integrity/failed 
@@ -207,11 +211,14 @@ body:
       label: Nextcloud Logs
       description: |
         Provide Nextcloud logs lines.
-        Copy all contents from `data/nextcloud.log` or a RAW from `/settings/admin/logging` section:
+      placeholder: |
+        Copy relevent contents from `data/nextcloud.log` or a use **Copy->Copy RAW** from *Administration settings->Logging* `/settings/admin/logging` section:
         > NOTE: This will be automatically formatted into code for better readability.
       render: shell
   - type: textarea
     id: additional-info
     attributes:
       label: Additional info
-      description: Any additional information related to the issue (ex. browser console errors, software versions).
+      description: Any additional information you think might be related to the issue
+      placeholder: |
+        (ex. browser console errors, software versions).
