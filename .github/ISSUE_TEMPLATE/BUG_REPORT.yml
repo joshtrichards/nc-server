@@ -167,6 +167,7 @@ body:
       label: Configuration report
       description: |
         Provide information about your configuration.
+        If you feel this isn't relevant enter "n/a" (not applicable), but providing it upfront make it easier to reproduce your report and more likely you'r issue will be looked at.
         To get this information, execute one of the following commands on the CLI:
         ```shell
         sudo -u www-data php occ config:list system
