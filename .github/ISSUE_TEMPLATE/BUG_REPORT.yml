@@ -17,16 +17,18 @@ body:
       label: "⚠️ This issue respects the following points: ⚠️"
       description: All conditions are **required**. Your issue can be closed if these are checked incorrectly.
       options:
-        - label: This is not a technical support question or a general troubleshooting query.
-          description: If it may be, posting your query to the [Nextcloud Community Forum](https://help.nextcloud.com/) may get you assistance faster.
+        - label: |
+            This is not a technical support question or a general troubleshooting query.
+            *If it could be, posting your query to the [Nextcloud Community Forum](https://help.nextcloud.com/) may get you assistance faster.*
           required: true
-        - label: This appears to be **bug**, not local/environment specific issue.
-          description: If unsure, posting your query to the [Nextcloud Community Forum](https://help.nextcloud.com/) first can provide clarity.
+        - label: |
+            This appears to be **bug**, not local/environment specific issue.
+            *If unsure, posting your query to the [Nextcloud Community Forum](https://help.nextcloud.com/) first can provide clarity.*
           required: true
-        - label: This issue does not seem to already be reported.
-          description: |
+        - label: |
+            This issue does not seem to already be reported.
             [Search existing open bugs](https://github.com/nextcloud/server/issues?q=is%3Aissue+sort%3Acreated-desc+is%3Aopen+label%3Abug) and [Search recently closed bugs](https://github.com/nextcloud/server/issues?q=is%3Aissue+is%3Aclosed+sort%3Acreated-desc+label%3Abug).
-            If your bug is already reported by someone else, give it a 👍 to help us prioritize it.
+            *Tip: If your bug is already reported by someone else, give it a 👍 to help us prioritize it.*
           required: true
         - label: Nextcloud Server **is** up to date. See [Maintenance and Release Schedule](https://github.com/nextcloud/server/wiki/Maintenance-and-Release-Schedule) for supported versions.
           required: true
